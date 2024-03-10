@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+</head>
+
+<body>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <script>
+        // Create a PeerJS object with your own API key
+        const peer = new Peer({
+            host: "6z98ptwz-9000.inc1.devtunnels.ms", 
+            path:'/v1',
+            debug: 3
+        });
+
+        peer.on('error', (error) => {
+            console.error('Client error:', error);
+        });
+
+        // Connect to another peer
+        const connectToPeer = (peerId) => {
+            const conn = peer.connect(peerId);
+
+            conn.on('open', () => {
+                console.log('Connected to ' + peerId);
+                conn.send('Hello from peer 1!');
+            });
+            conn.send('hi')
+
+            conn.on('data', (data) => {
+                console.log('Received:', data);
+            });
+        };
+
+        peer.on('open', (id) => {
+            console.log('My peer ID is: ' + id);
+
+            let peerId = 'my_custom_id'
+            connectToPeer(peerId);
+        });
+
+    </script>
+</body>
+
+</html>
